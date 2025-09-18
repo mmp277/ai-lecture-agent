@@ -1,4 +1,9 @@
-# AI Lecture Agent (Gemini-powered)
+
+### Mithil Modi
+### Indian Institute of Technology, Guwahati
+### Mechanical Engineering
+
+# AI Lecture Agent (FineTuned Model)
 
 Read lecture notes (.pdf, .txt, .docx), summarize with Gemini, generate flashcards, and extract a formula sheet into Word documents. Only the input directory is required.
 
