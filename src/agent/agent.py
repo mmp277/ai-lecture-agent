@@ -10,19 +10,15 @@ from .output import write_summary_docx, write_flashcards_docx, write_formula_she
 
 
 class PlannerAgent:
-    def __init__(self, engine: str = "tinyllama", lora_dir: str | None = None, gemini_key: str | None = "AIzaSyAMfUaM6Pa72wS3qPRMLEHrxv8YEI54xss") -> None:
+    def __init__(self, engine: str = "tinyllama", lora_dir: str | None = None, gemini_key: str | None = None) -> None:
         self.engine = engine
-        
-        # Use this block to show you're using 'tinyllama' but actually use GeminiClient
+
+        # Select provider based on engine
         if engine == "tinyllama":
-            # Commented out original code to retrieve later
-            # self.llm = TinyLlamaLoRA(lora_dir=lora_dir)
-            self.llm = GeminiClient(api_key=gemini_key)
-        
-        # This block is kept for Gemini but commented out
+            self.llm = TinyLlamaLoRA(lora_dir=lora_dir)
         elif engine == "gemini":
-            self.llm = GeminiClient(api_key=gemini_key)
-        
+            # Use API key from environment or provided gemini_key
+            self.llm = GeminiClient(api_key=gemini_key or os.getenv("GEMINI_API_KEY"))
         else:
             raise ValueError(f"Unknown engine: {engine}")
 
@@ -45,14 +41,6 @@ class PlannerAgent:
             "You are an agent that decides how to process technical lecture notes. "
             "Given the text, decide key points and glossary to preserve. Return bullet points.\n\n" + context[:2000]
         )
-        
-        # Commented out original reasoning block
-        # if isinstance(self.llm, TinyLlamaLoRA):
-        #     return self.llm.chat("Reason about key points.", prompt, max_new_tokens=200)
-        # else:
-        #     return self.llm.summarize(prompt)
-        
-        # Always use GeminiClient
         return self.llm.summarize(prompt)
 
     def execute(self, input_dir: str, outputs_dir: str) -> Tuple[List[Tuple[str, List[str]]], List[Tuple[str, List[Tuple[str, str]]]], List[Tuple[str, List[Tuple[str, Dict[str, str]]]]]]:
@@ -68,16 +56,6 @@ class PlannerAgent:
             clean = normalize_whitespace(text)
             chunks = chunk_text(clean, max_tokens=400)
             joined = "\n\n".join(chunks[:4]) if chunks else clean[:3000]
-
-            # Commented out original block for llama model
-            # if isinstance(self.llm, TinyLlamaLoRA):
-            #     summary_text = self.llm.summarize(joined)
-            #     cards = self.llm.flashcards(joined, num_cards=15)
-            # else:
-            #     summary_text = self.llm.summarize(joined)
-            #     cards = self.llm.flashcards(clean, num_cards=20)
-
-            # Always use GeminiClient
             summary_text = self.llm.summarize(joined)
             cards = self.llm.flashcards(clean, num_cards=20)
 

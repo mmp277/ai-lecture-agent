@@ -1,5 +1,17 @@
 import argparse
 import os
+from pathlib import Path
+
+try:
+    # Load environment variables from .env if present
+    from dotenv import load_dotenv  # type: ignore
+    _env_path = Path(__file__).parents[2] / ".env"
+    if _env_path.exists():
+        load_dotenv(dotenv_path=str(_env_path))
+    else:
+        load_dotenv()
+except Exception:
+    pass
 from typing import List, Tuple, Dict
 
 from .agent import PlannerAgent

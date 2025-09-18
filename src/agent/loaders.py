@@ -69,29 +69,43 @@ def load_documents_from_dir(directory: str) -> List[Tuple[str, str]]:
 
 
 def load_triplets(lectures_dir: str, summaries_dir: str, flashcards_dir: str) -> List[Tuple[str, str, str]]:
-	"""Return list of (lecture_text, reference_summary, reference_flashcards)."""
-	triplets: List[Tuple[str, str, str]] = []
-	for i in range(1, 100):
-		lx = f"l{i}"
-		lec_pdf = os.path.join(lectures_dir, f"{lx}.pdf")
-		if not os.path.exists(lec_pdf):
-			continue
-		lecture_text = read_pdf(lec_pdf)
-		ref_sum = ""
-		ref_fc = ""
-		# summary could be .doc or .docx
-		s_doc = os.path.join(summaries_dir, f"{lx}_s.doc")
-		s_docx = os.path.join(summaries_dir, f"{lx}_s.docx")
-		if os.path.exists(s_docx):
-			ref_sum = read_docx(s_docx)
-		elif os.path.exists(s_doc):
-			ref_sum = read_doc(s_doc)
-		# flashcards could be .doc or .docx
-		f_doc = os.path.join(flashcards_dir, f"{lx}_f.doc")
-		f_docx = os.path.join(flashcards_dir, f"{lx}_f.docx")
-		if os.path.exists(f_docx):
-			ref_fc = read_docx(f_docx)
-		elif os.path.exists(f_doc):
-			ref_fc = read_doc(f_doc)
-		triplets.append((lecture_text, ref_sum, ref_fc))
-	return triplets
+    """Return list of (lecture_text, reference_summary, reference_flashcards).
+
+    Supports file name variants: lX_s.*, lX_summary.*, lX_f.*, lX_flashcards.* (.docx/.doc)
+    """
+    triplets: List[Tuple[str, str, str]] = []
+    for i in range(1, 100):
+        lx = f"l{i}"
+        lec_pdf = os.path.join(lectures_dir, f"{lx}.pdf")
+        if not os.path.exists(lec_pdf):
+            continue
+        lecture_text = read_pdf(lec_pdf)
+
+        # Summary candidates
+        sum_candidates = [
+            os.path.join(summaries_dir, f"{lx}_s.docx"),
+            os.path.join(summaries_dir, f"{lx}_s.doc"),
+            os.path.join(summaries_dir, f"{lx}_summary.docx"),
+            os.path.join(summaries_dir, f"{lx}_summary.doc"),
+        ]
+        ref_sum = ""
+        for p in sum_candidates:
+            if os.path.exists(p):
+                ref_sum = read_docx(p) if p.endswith(".docx") else read_doc(p)
+                break
+
+        # Flashcards candidates
+        fc_candidates = [
+            os.path.join(flashcards_dir, f"{lx}_f.docx"),
+            os.path.join(flashcards_dir, f"{lx}_f.doc"),
+            os.path.join(flashcards_dir, f"{lx}_flashcards.docx"),
+            os.path.join(flashcards_dir, f"{lx}_flashcards.doc"),
+        ]
+        ref_fc = ""
+        for p in fc_candidates:
+            if os.path.exists(p):
+                ref_fc = read_docx(p) if p.endswith(".docx") else read_doc(p)
+                break
+
+        triplets.append((lecture_text, ref_sum, ref_fc))
+    return triplets

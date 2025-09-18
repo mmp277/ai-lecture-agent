@@ -107,7 +107,7 @@ class TinyLlamaLoRA:
 
 # Gemini and Perplexity kept for previous flow
 class GeminiClient:
-	def __init__(self, model_name: str = "gemini-1.5-flash", api_key: str | None = "AIzaSyAMfUaM6Pa72wS3qPRMLEHrxv8YEI54xss") -> None:
+	def __init__(self, model_name: str = "gemini-1.5-flash", api_key: str | None = None) -> None:
 		key = api_key or os.getenv("GEMINI_API_KEY")
 		if not key:
 			raise RuntimeError("Gemini API key missing")

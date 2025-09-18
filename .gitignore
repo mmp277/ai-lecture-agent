@@ -1,0 +1,30 @@
+# Env
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.venv/
+venv/
+
+# Models and large binaries
+ai-lecture-agent/models/
+**/*.safetensors
+**/*.bin
+**/*.pt
+**/optimizer.pt
+**/scheduler.pt
+**/training_args.bin
+
+# Data and outputs
+ai-lecture-agent/outputs/
+ai-lecture-agent/lecture notes/
+
+# OS/Editor
+.DS_Store
+Thumbs.db
+.vscode/
+*.code-workspace

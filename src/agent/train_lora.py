@@ -65,7 +65,8 @@ def train_lora(lectures_dir: str, summaries_dir: str, flashcards_dir: str, outpu
 	except Exception:
 		pass
 
-	lora = LoraConfig(r=4, lora_alpha=8, lora_dropout=0.05, target_modules=["q_proj", "v_proj"])  # type: ignore
+	# Slightly stronger adapter for quality
+	lora = LoraConfig(r=8, lora_alpha=16, lora_dropout=0.05, target_modules=["q_proj", "k_proj", "v_proj", "o_proj"])  # type: ignore
 	model = get_peft_model(model, lora)
 
 	# Ensure adapter config exists even if training is interrupted
@@ -83,14 +84,15 @@ def train_lora(lectures_dir: str, summaries_dir: str, flashcards_dir: str, outpu
 
 	args = TrainingArguments(
 		per_device_train_batch_size=1,
-		gradient_accumulation_steps=1,
-		learning_rate=2e-4,
-		max_steps=20,
-		logging_steps=1,
+		gradient_accumulation_steps=2,
+		learning_rate=1e-4,
+		max_steps=200,
+		warmup_steps=20,
+		logging_steps=10,
 		report_to=[],
 		output_dir=output_dir,
-		save_steps=10,
-		save_total_limit=1,
+		save_steps=50,
+		save_total_limit=2,
 		dataloader_num_workers=0,
 		dataloader_pin_memory=False,
 		no_cuda=True,
