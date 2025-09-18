@@ -50,10 +50,6 @@ python validate_lora.py --lora_dir models/tinyllama-lora \
 python -m src.agent.cli "lecture notes/input" --out outputs --engine tinyllama --lora models/tinyllama-lora
 ```
 
-## Repo hygiene
-- Add a `.env` file with secrets (not committed). This repo loads it automatically.
-- Large/local data is ignored by `.gitignore`: `ai-lecture-agent/lecture notes/`, `ai-lecture-agent/models/`, `ai-lecture-agent/outputs/`, model binaries like `*.safetensors`, `*.bin`, `*.pt`, and `.env`.
-
 ## Notes
 - Uses Gemini (`gemini-1.5-flash`) via `google-generativeai`. No paid libraries are required, but API usage may incur costs on your account.
 - Formula extraction is heuristic. For scanned PDFs, add OCR if needed (e.g., Tesseract).
