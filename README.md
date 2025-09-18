@@ -5,7 +5,7 @@
 
 # AI Lecture Agent (FineTuned Model)
 
-Read lecture notes (.pdf, .txt, .docx), summarize with Gemini, generate flashcards, and extract a formula sheet into Word documents. Only the input directory is required.
+Read lecture notes (.pdf, .txt, .docx), summarize with Gemini/tinyllama(fine-tuned with LoRA), generate flashcards, and extract a formula sheet into Word documents. Only the input directory is required.
 
 ## Requirements
 - Python 3.9+
